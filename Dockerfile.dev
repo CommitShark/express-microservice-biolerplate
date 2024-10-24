@@ -1,0 +1,17 @@
+FROM node:20-alpine
+
+ENV NODE_ENV=development 
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+COPY package.json package-lock.json tsconfig.json ./
+
+RUN npm install
+
+# Copy app source code
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]
