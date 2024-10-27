@@ -1,9 +1,16 @@
+import { Permission } from "../lib/constants";
+import { IDeviceInfo, IUser, JwtAuthzPayload } from "./shared";
+
 declare global {
   namespace Express {
-    interface Claims {}
+    interface User {
+      permissions: Permission[];
+      sub: string;
+      sessionId: string;
+    }
 
     export interface Request {
-      claims: Claims;
+      user?: User;
     }
   }
 }

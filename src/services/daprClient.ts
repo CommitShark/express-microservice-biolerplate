@@ -23,58 +23,20 @@ class DaprClientService {
     return DaprClientService.instance;
   }
 
-  async publishNotification<T extends object>(topic: string, data: T) {
-    const pubsub = readEnv("DAPR_NOTIFICATION_PUBSUB_NAME") as string;
-    try {
-      logger.info(`publishNotification ${topic} pubsub: ${pubsub}`);
-      return await this.client.pubsub.publish(
-        pubsub,
-        `${topic}_${stage}`,
-        data
-      );
-    } catch (error) {
-      logger.info(`Error ${JSON.stringify(error)}`);
-      throw error;
-    }
-  }
-
-  async publishPaymentEvent<T extends object>(topic: string, data: T) {
-    const pubsub = readEnv("DAPR_PAYMENT_PUBSUB_NAME") as string;
-    try {
-      logger.info(`publishNotification ${topic} pubsub: ${pubsub}`);
-      return await this.client.pubsub.publish(
-        pubsub,
-        `${topic}_${stage}`,
-        data
-      );
-    } catch (error) {
-      logger.info(`Error ${JSON.stringify(error)}`);
-      throw error;
-    }
-  }
-
-  async invoke<T extends object>(
+  async invoke<T extends object, R>(
     appId: string,
     methodName: string,
     method: HttpMethod,
-    data: T,
-    headers: any = {}
-  ) {
-    if (!headers["x-user-sub"]) {
-      headers["x-user-sub"] = JSON.stringify({ sub: "auto", user_role: "" });
-    }
-
+    data?: T
+  ): Promise<R> {
     try {
       logger.info(`invoke ${appId} ${methodName} ${method}`);
-      return await this.client.invoker.invoke(
+      return (await this.client.invoker.invoke(
         appId,
         methodName,
         method,
-        method === HttpMethod.GET ? undefined : data,
-        {
-          headers,
-        }
-      );
+        method === HttpMethod.GET ? undefined : data
+      )) as any;
     } catch (error) {
       logger.info(`Error ${JSON.stringify(error)}`);
       throw error;
