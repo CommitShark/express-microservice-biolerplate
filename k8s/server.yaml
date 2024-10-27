@@ -2,31 +2,31 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: placeholder-svc
-  name: placeholder-svc
+    app: placeholder
+  name: placeholder
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: placeholder-svc
+      app: placeholder
   strategy: {}
   template:
     metadata:
       labels:
-        app: placeholder-svc
+        app: placeholder
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "placeholder-svc"
+        dapr.io/app-id: "placeholder"
         dapr.io/app-port: "3000"
         dapr.io/enable-api-logging: "true"
         dapr.io/log-level: "debug"
     spec:
       containers:
-        - image: placeholder-svc
-          name: placeholder-svc
+        - image: placeholder
+          name: placeholder
           imagePullPolicy: IfNotPresent
           resources: {}
           envFrom:
             - secretRef:
-                name: placeholder-svc
+                name: placeholder
 status: {}
